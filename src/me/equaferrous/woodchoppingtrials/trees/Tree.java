@@ -6,21 +6,27 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.type.Sapling;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.ArrayList;
 
 public class Tree {
 
     private static final int TICK_DELAY = 10;
+    private static final int TREE_SEARCH_WIDTH = 1;
+    private static final int TREE_SEARCH_HEIGHT = 7;
 
     private Block saplingBlock;
+    private ArrayList<Block> logList = new ArrayList<>();
+    private TreeType treeType;
+    private Material logType;
+    private Material saplingType;
 
     private int maxGrowTime;
     private int currentGrowTime = 0;
-    private TreeType treeType;
 
     private BukkitTask growTickTask;
+    private BukkitTask checkTreeGoneTask;
 
     // --------------------------------------------
 
@@ -28,10 +34,10 @@ public class Tree {
         saplingBlock = blockLocation.getBlock();
         maxGrowTime = ticksToGrow;
         this.treeType = treeType;
+        logType = Material.OAK_LOG;
+        saplingType = Material.OAK_SAPLING;
 
-        growTickTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::tickGrowTimer, TICK_DELAY, TICK_DELAY);
-
-        placeSapling();
+        regrowTree();
     }
 
     // ---------------------------------------------
@@ -39,7 +45,7 @@ public class Tree {
     // ---------------------------------------------
 
     private void placeSapling() {
-        saplingBlock.setType(Material.OAK_SAPLING);
+        saplingBlock.setType(saplingType);
     }
 
     private void tickGrowTimer() {
@@ -49,7 +55,9 @@ public class Tree {
                 placeSapling();
             }
             else {
+                findLogBlocks();
                 growTickTask.cancel();
+                checkTreeGoneTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::checkTreeGone, 20, 20);
             }
         }
         else {
@@ -61,4 +69,43 @@ public class Tree {
         saplingBlock.setType(Material.AIR);
         return saplingBlock.getWorld().generateTree(saplingBlock.getLocation(), treeType);
     }
+
+    private void findLogBlocks() {
+        for (int x = -TREE_SEARCH_WIDTH; x <= TREE_SEARCH_WIDTH; x++) {
+            for (int z = -TREE_SEARCH_WIDTH; z <= TREE_SEARCH_WIDTH; z++) {
+                for (int y = 0; y < TREE_SEARCH_HEIGHT; y++) {
+                    int blockX = saplingBlock.getX() + x;
+                    int blockY = saplingBlock.getY() + y;
+                    int blockZ = saplingBlock.getZ() + z;
+
+                    Block block = new Location(saplingBlock.getWorld(), blockX, blockY, blockZ).getBlock();
+                    if (block.getType().equals(logType)) {
+                        logList.add(block);
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkTreeGone() {
+        ArrayList<Block> tempList = new ArrayList<>(logList);
+
+        for (Block block : tempList) {
+            if (!block.getType().equals(logType)) {
+                logList.remove(block);
+            }
+        }
+
+        if (logList.isEmpty()) {
+            regrowTree();
+            checkTreeGoneTask.cancel();
+        }
+    }
+
+    private void regrowTree() {
+        currentGrowTime = 0;
+        growTickTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::tickGrowTimer, TICK_DELAY, TICK_DELAY);
+        placeSapling();
+    }
+
 }
