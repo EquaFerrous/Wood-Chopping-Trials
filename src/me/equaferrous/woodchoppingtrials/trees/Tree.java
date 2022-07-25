@@ -1,10 +1,8 @@
 package me.equaferrous.woodchoppingtrials.trees;
 
+import me.equaferrous.woodchoppingtrials.TextEntity;
 import me.equaferrous.woodchoppingtrials.WoodChoppingTrials;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.TreeType;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -17,6 +15,7 @@ public class Tree {
     private static final int TREE_SEARCH_HEIGHT = 7;
 
     private Block saplingBlock;
+    private TextEntity textEntity;
     private ArrayList<Block> logList = new ArrayList<>();
     private TreeType treeType;
     private Material logType;
@@ -32,6 +31,8 @@ public class Tree {
 
     public Tree(Location blockLocation, int ticksToGrow, TreeType treeType) {
         saplingBlock = blockLocation.getBlock();
+        textEntity = new TextEntity(blockLocation.add(0,1,0));
+
         maxGrowTime = ticksToGrow;
         this.treeType = treeType;
         logType = Material.OAK_LOG;
@@ -53,15 +54,19 @@ public class Tree {
             boolean treeGrown = growTree();
             if (!treeGrown) {
                 placeSapling();
+                textEntity.setText(ChatColor.RED +"Blocked");
             }
             else {
                 findLogBlocks();
+                textEntity.setVisible(false);
                 growTickTask.cancel();
                 checkTreeGoneTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::checkTreeGone, 20, 20);
             }
         }
         else {
             currentGrowTime += TICK_DELAY;
+            String timeText = String.valueOf((int) Math.ceil(((float) maxGrowTime / 20) - ((float) currentGrowTime / 20)));
+            textEntity.setText(ChatColor.GREEN +"Growing ["+ timeText +"]");
         }
     }
 
@@ -105,6 +110,7 @@ public class Tree {
     private void regrowTree() {
         currentGrowTime = 0;
         growTickTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::tickGrowTimer, TICK_DELAY, TICK_DELAY);
+        textEntity.setVisible(true);
         placeSapling();
     }
 
