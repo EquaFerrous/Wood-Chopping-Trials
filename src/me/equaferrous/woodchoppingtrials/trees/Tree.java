@@ -14,9 +14,11 @@ public class Tree {
     private static final int TREE_SEARCH_WIDTH = 1;
     private static final int TREE_SEARCH_HEIGHT = 7;
 
-    private Block saplingBlock;
-    private TextEntity textEntity;
-    private ArrayList<Block> logList = new ArrayList<>();
+    private final Block saplingBlock;
+    private final TextEntity textEntity;
+    private TreeStatus status;
+
+    private final ArrayList<Block> logList = new ArrayList<>();
     private TreeType treeType;
     private Material logType;
     private Material saplingType;
@@ -38,10 +40,44 @@ public class Tree {
         logType = Material.OAK_LOG;
         saplingType = Material.OAK_SAPLING;
 
-        regrowTree();
+        changeStatus(TreeStatus.GROWING);
     }
 
     // ---------------------------------------------
+
+    public void changeStatus(TreeStatus newStatus) {
+        if (newStatus.equals(status)) {
+            return;
+        }
+
+        status = newStatus;
+        switch (status) {
+            case GROWN:
+                textEntity.setVisible(false);
+                findLogBlocks();
+                checkTreeGoneTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::checkTreeGone, 20, 20);
+                break;
+
+            case GROWING:
+                currentGrowTime = 0;
+                textEntity.setVisible(true);
+                placeSapling();
+                updateGrowTimeText();
+                growTickTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::tickGrowTimer, TICK_DELAY, TICK_DELAY);
+                break;
+
+            case BLOCKED:
+                break;
+
+            case DISABLED:
+                break;
+
+        }
+    }
+
+    public TreeStatus getTreeStatus() {
+        return status;
+    }
 
     // ---------------------------------------------
 
@@ -49,32 +85,13 @@ public class Tree {
         saplingBlock.setType(saplingType);
     }
 
-    private void tickGrowTimer() {
-        if (currentGrowTime >= maxGrowTime) {
-            boolean treeGrown = growTree();
-            if (!treeGrown) {
-                placeSapling();
-                textEntity.setText(ChatColor.RED +"Blocked");
-            }
-            else {
-                findLogBlocks();
-                textEntity.setVisible(false);
-                growTickTask.cancel();
-                checkTreeGoneTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::checkTreeGone, 20, 20);
-            }
-        }
-        else {
-            currentGrowTime += TICK_DELAY;
-            String timeText = String.valueOf((int) Math.ceil(((float) maxGrowTime / 20) - ((float) currentGrowTime / 20)));
-            textEntity.setText(ChatColor.GREEN +"Growing ["+ timeText +"]");
-        }
-    }
-
+    // Grows the tree. Returns whether the tree was successfully grown.
     private boolean growTree() {
         saplingBlock.setType(Material.AIR);
         return saplingBlock.getWorld().generateTree(saplingBlock.getLocation(), treeType);
     }
 
+    // Finds all log blocks in the tree search area.
     private void findLogBlocks() {
         for (int x = -TREE_SEARCH_WIDTH; x <= TREE_SEARCH_WIDTH; x++) {
             for (int z = -TREE_SEARCH_WIDTH; z <= TREE_SEARCH_WIDTH; z++) {
@@ -92,6 +109,34 @@ public class Tree {
         }
     }
 
+    // Updates the text entity to show grow time remaining.
+    private void updateGrowTimeText() {
+        String timeText = String.valueOf((int) Math.ceil(((float) maxGrowTime / 20) - ((float) currentGrowTime / 20)));
+        textEntity.setText(ChatColor.GREEN +"Growing ["+ timeText +"]");
+    }
+
+    // ----------------------------------------------------
+
+    // Increments the grow timer and attempts to grow the tree when fully grown.
+    private void tickGrowTimer() {
+        if (currentGrowTime >= maxGrowTime) {
+            boolean treeGrown = growTree();
+            if (!treeGrown) {
+                placeSapling();
+                textEntity.setText(ChatColor.RED +"Blocked");
+            }
+            else {
+                growTickTask.cancel();
+                changeStatus(TreeStatus.GROWN);
+            }
+        }
+        else {
+            currentGrowTime += TICK_DELAY;
+            updateGrowTimeText();
+        }
+    }
+
+    // Checks if all log blocks have been mined and regrows the tree.
     private void checkTreeGone() {
         ArrayList<Block> tempList = new ArrayList<>(logList);
 
@@ -102,16 +147,8 @@ public class Tree {
         }
 
         if (logList.isEmpty()) {
-            regrowTree();
             checkTreeGoneTask.cancel();
+            changeStatus(TreeStatus.GROWING);
         }
     }
-
-    private void regrowTree() {
-        currentGrowTime = 0;
-        growTickTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::tickGrowTimer, TICK_DELAY, TICK_DELAY);
-        textEntity.setVisible(true);
-        placeSapling();
-    }
-
 }
