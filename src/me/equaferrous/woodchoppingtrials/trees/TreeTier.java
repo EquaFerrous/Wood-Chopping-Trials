@@ -52,7 +52,7 @@ public enum TreeTier {
         for (TreeTier tier : TreeTier.values()) {
             String path = "treeTier."+ tier.name();
             config.addDefault(path +".treeType", "TREE");
-            config.addDefault(path +".saplingType", "OAK");
+            config.addDefault(path +".saplingType", "OAK_SAPLING");
             config.addDefault(path +".logType", "OAK_LOG");
             config.addDefault(path +".growTime", 100);
         }
@@ -61,9 +61,9 @@ public enum TreeTier {
     public static void setupValues(FileConfiguration config) {
         for (TreeTier tier : TreeTier.values()) {
             String path = "treeTier."+ tier.name();
-            tier.treeType = TreeType.valueOf(config.getString(path +".treeType"));
-            tier.saplingType = Material.valueOf(config.getString(path +".saplingType") + "_SAPLING");
-            tier.logType = Material.valueOf(config.getString(path +".logType"));
+            tier.treeType = TreeType.valueOf(config.getString(path +".treeType").toUpperCase());
+            tier.saplingType = Material.valueOf(config.getString(path +".saplingType").toUpperCase());
+            tier.logType = Material.valueOf(config.getString(path +".logType").toUpperCase());
             tier.growTime = config.getInt(path +".growTime");
         }
     }
