@@ -17,6 +17,7 @@ public class Tree {
     private final Block saplingBlock;
     private final TextEntity textEntity;
     private TreeStatus status;
+    private TreeTier tier;
 
     private final ArrayList<Block> logList = new ArrayList<>();
     private TreeType treeType;
@@ -31,14 +32,15 @@ public class Tree {
 
     // --------------------------------------------
 
-    public Tree(Location blockLocation, int ticksToGrow, TreeType treeType) {
+    public Tree(Location blockLocation, TreeTier treeTier) {
         saplingBlock = blockLocation.getBlock();
         textEntity = new TextEntity(blockLocation.add(0,1,0));
+        tier = treeTier;
 
-        maxGrowTime = ticksToGrow;
-        this.treeType = treeType;
-        logType = Material.OAK_LOG;
-        saplingType = Material.OAK_SAPLING;
+        maxGrowTime = tier.getGrowTime();
+        treeType = tier.getTreeType();
+        logType = tier.getLogType();
+        saplingType = tier.getSaplingType();
 
         changeStatus(TreeStatus.GROWING);
     }
