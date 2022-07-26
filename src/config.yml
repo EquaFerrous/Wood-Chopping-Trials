@@ -1,0 +1,51 @@
+treeTier:
+  ONE:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 200
+  TWO:
+    treeType: TREE
+    saplingType: BIRCH_SAPLING
+    logType: SPRUCE_LOG
+    growTime: 200
+  THREE:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: COBBLESTONE
+    growTime: 200
+  FOUR:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 100
+  FIVE:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 100
+  SIX:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 100
+  SEVEN:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 100
+  EIGHT:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 100
+  NINE:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 100
+  TEN:
+    treeType: TREE
+    saplingType: OAK_SAPLING
+    logType: OAK_LOG
+    growTime: 100

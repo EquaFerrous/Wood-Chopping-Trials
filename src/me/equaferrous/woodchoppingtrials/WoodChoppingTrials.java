@@ -55,6 +55,6 @@ public class WoodChoppingTrials extends JavaPlugin {
         TreeTier.setupConfig(config);
 
         config.options().copyDefaults(true);
-        saveConfig();
+        this.saveDefaultConfig();
     }
 }
