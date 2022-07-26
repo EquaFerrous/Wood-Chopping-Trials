@@ -16,14 +16,13 @@ public class Tree {
 
     private final Block saplingBlock;
     private final TextEntity textEntity;
-    private TreeStatus status;
-    private TreeTier tier;
-
     private final ArrayList<Block> logList = new ArrayList<>();
+    private TreeStatus status;
+
+    private TreeTier tier;
     private TreeType treeType;
     private Material logType;
     private Material saplingType;
-
     private int maxGrowTime;
     private int currentGrowTime = 0;
 
@@ -103,7 +102,8 @@ public class Tree {
                     int blockZ = saplingBlock.getZ() + z;
 
                     Block block = new Location(saplingBlock.getWorld(), blockX, blockY, blockZ).getBlock();
-                    if (block.getType().equals(logType)) {
+                    if (block.getType().toString().contains("_LOG")) {
+                        block.setType(logType);
                         logList.add(block);
                     }
                 }
