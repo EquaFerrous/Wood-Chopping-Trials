@@ -31,5 +31,9 @@ public class TextEntity {
         entity.teleport(location);
     }
 
+    public void delete() {
+        entity.remove();
+    }
+
     // -----------------------------------------------------
 }

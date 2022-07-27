@@ -1,6 +1,7 @@
 package me.equaferrous.woodchoppingtrials;
 
 import me.equaferrous.woodchoppingtrials.trees.Tree;
+import me.equaferrous.woodchoppingtrials.trees.TreeManager;
 import me.equaferrous.woodchoppingtrials.trees.TreeTier;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,9 +24,13 @@ public class WoodChoppingTrials extends JavaPlugin {
         TreeTier.setupValues(this.getConfig());
 
         World overworld = Bukkit.getWorlds().get(0);
-        new Tree(new Location(overworld, 18, -60, 8), TreeTier.ONE);
+        TreeManager treeManager = TreeManager.getInstance();
+        treeManager.createTree(new Location(overworld, 18,-60,8), TreeTier.ONE);
+        treeManager.createTree(new Location(overworld, 18,-60,12), TreeTier.TWO);
+        treeManager.createTree(new Location(overworld, 18,-60,16), TreeTier.THREE);
 
         Bukkit.getLogger().info(ChatColor.GREEN + this.getName() + " Enabled");
+
     }
 
     @Override

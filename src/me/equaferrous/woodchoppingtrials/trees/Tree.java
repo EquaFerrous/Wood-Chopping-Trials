@@ -80,6 +80,23 @@ public class Tree {
         return status;
     }
 
+    public Location getLocation() {
+        return saplingBlock.getLocation();
+    }
+
+    public void delete() {
+        if (growTickTask != null) {
+            growTickTask.cancel();
+            growTickTask = null;
+        }
+        if (checkTreeGoneTask != null) {
+            checkTreeGoneTask.cancel();
+            checkTreeGoneTask = null;
+        }
+        textEntity.delete();
+        changeStatus(TreeStatus.DISABLED);
+    }
+
     // ---------------------------------------------
 
     private void placeSapling() {
