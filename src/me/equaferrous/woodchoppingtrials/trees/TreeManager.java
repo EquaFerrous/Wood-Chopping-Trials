@@ -75,6 +75,13 @@ public class TreeManager {
         return treeList;
     }
 
+    public void deleteAllTrees() {
+        List<Tree> tempList = new ArrayList<>(treeList);
+        for (Tree tree : tempList) {
+            deleteTree(tree);
+        }
+    }
+
     // ---------------------------------------
 
     public void saveTreeData() {

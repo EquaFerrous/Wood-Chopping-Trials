@@ -37,6 +37,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         TreeManager.getInstance().saveTreeData();
+        TreeManager.getInstance().deleteAllTrees();
 
         World overworld = Bukkit.getWorlds().get(0);
         List<Entity> entityList = overworld.getEntities();

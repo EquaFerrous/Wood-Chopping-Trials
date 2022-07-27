@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tree {
 
@@ -17,7 +18,7 @@ public class Tree {
 
     private final Block saplingBlock;
     private final TextEntity textEntity;
-    private final ArrayList<Block> logList = new ArrayList<>();
+    private final List<Block> logList = new ArrayList<>();
     private TreeStatus status;
 
     private TreeTier tier;
@@ -100,6 +101,11 @@ public class Tree {
             checkTreeGoneTask.cancel();
             checkTreeGoneTask = null;
         }
+
+        for (Block log : logList) {
+            log.setType(Material.AIR);
+        }
+
         textEntity.delete();
         changeStatus(TreeStatus.DISABLED);
     }
