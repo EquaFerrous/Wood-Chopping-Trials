@@ -2,8 +2,6 @@ package me.equaferrous.woodchoppingtrials.trees;
 
 import me.equaferrous.woodchoppingtrials.utility.ConfigManager;
 import me.equaferrous.woodchoppingtrials.Main;
-import me.equaferrous.woodchoppingtrials.utility.Utility;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,19 +19,14 @@ public class TreeManager {
 
     // --------------------------------------
 
-    public TreeManager() {
-        if (instance != null) {
-            return;
-        }
-
-        instance = this;
+    private TreeManager() {
     }
 
     // ---------------------------------------
 
     public static TreeManager getInstance() {
         if (instance == null) {
-            new TreeManager();
+            instance = new TreeManager();
         }
         return instance;
     }
@@ -81,6 +74,8 @@ public class TreeManager {
     public List<Tree> getTreeList() {
         return treeList;
     }
+
+    // ---------------------------------------
 
     public void saveTreeData() {
         ConfigManager.resetConfig("treeData");
