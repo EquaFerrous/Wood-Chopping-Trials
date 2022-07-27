@@ -14,7 +14,7 @@ public class TextEntity {
         entity = (ArmorStand) location.getWorld().spawnEntity(location.add(0.5,0,0.5), EntityType.ARMOR_STAND);
         entity.setMarker(true);
         entity.setVisible(false);
-        entity.addScoreboardTag(WoodChoppingTrials.getPlugin().getName());
+        entity.addScoreboardTag(Main.getPlugin().getName());
     }
 
     // ----------------------------------------------------

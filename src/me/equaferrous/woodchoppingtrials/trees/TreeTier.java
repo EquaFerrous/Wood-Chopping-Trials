@@ -1,7 +1,5 @@
 package me.equaferrous.woodchoppingtrials.trees;
 
-import me.equaferrous.woodchoppingtrials.WoodChoppingTrials;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.configuration.file.FileConfiguration;

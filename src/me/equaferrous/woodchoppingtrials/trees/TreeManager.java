@@ -1,6 +1,9 @@
 package me.equaferrous.woodchoppingtrials.trees;
 
+import me.equaferrous.woodchoppingtrials.utility.ConfigManager;
+import me.equaferrous.woodchoppingtrials.Main;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,5 +72,36 @@ public class TreeManager {
 
     public List<Tree> getTreeList() {
         return treeList;
+    }
+
+    public void saveTreeData() {
+        ConfigManager.resetConfig("treeData");
+        FileConfiguration config = ConfigManager.getConfig("treeData");
+
+        int treeNum = 1;
+        for (Tree tree : treeList) {
+            String path = "data."+ treeNum;
+
+            config.set(path +".location", tree.getLocation());
+            config.set(path +".tier", tree.getTier().toString());
+
+            treeNum++;
+        }
+        ConfigManager.saveConfig(config, "treeData");
+        Main.postServerMessage("TreeData saved.");
+    }
+
+    public void loadTreeData() {
+        FileConfiguration config = ConfigManager.getConfig("treeData");
+        if (!config.contains("data")) {
+            return;
+        }
+
+        for (String key : config.getConfigurationSection("data").getKeys(false)) {
+            Location location = config.getLocation("data."+ key +".location");
+            TreeTier treeTier = TreeTier.valueOf(config.getString("data."+ key +".tier"));
+            createTree(location, treeTier);
+        }
+        Main.postServerMessage("TreeData loaded.");
     }
 }

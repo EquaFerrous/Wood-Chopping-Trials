@@ -1,7 +1,7 @@
 package me.equaferrous.woodchoppingtrials.trees;
 
 import me.equaferrous.woodchoppingtrials.TextEntity;
-import me.equaferrous.woodchoppingtrials.WoodChoppingTrials;
+import me.equaferrous.woodchoppingtrials.Main;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitTask;
@@ -56,7 +56,7 @@ public class Tree {
             case GROWN:
                 textEntity.setVisible(false);
                 findLogBlocks();
-                checkTreeGoneTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::checkTreeGone, 20, 20);
+                checkTreeGoneTask = Bukkit.getScheduler().runTaskTimer(Main.getPlugin(), this::checkTreeGone, 20, 20);
                 break;
 
             case GROWING:
@@ -64,7 +64,7 @@ public class Tree {
                 textEntity.setVisible(true);
                 placeSapling();
                 updateGrowTimeText();
-                growTickTask = Bukkit.getScheduler().runTaskTimer(WoodChoppingTrials.getPlugin(), this::tickGrowTimer, TICK_DELAY, TICK_DELAY);
+                growTickTask = Bukkit.getScheduler().runTaskTimer(Main.getPlugin(), this::tickGrowTimer, TICK_DELAY, TICK_DELAY);
                 break;
 
             case BLOCKED:
@@ -82,6 +82,10 @@ public class Tree {
 
     public Location getLocation() {
         return saplingBlock.getLocation();
+    }
+
+    public TreeTier getTier() {
+        return tier;
     }
 
     public void delete() {

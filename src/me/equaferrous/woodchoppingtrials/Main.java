@@ -1,6 +1,5 @@
 package me.equaferrous.woodchoppingtrials;
 
-import me.equaferrous.woodchoppingtrials.trees.Tree;
 import me.equaferrous.woodchoppingtrials.trees.TreeManager;
 import me.equaferrous.woodchoppingtrials.trees.TreeTier;
 import org.bukkit.*;
@@ -11,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
-public class WoodChoppingTrials extends JavaPlugin {
+public class Main extends JavaPlugin {
 
     private static Plugin plugin;
 
@@ -22,12 +21,9 @@ public class WoodChoppingTrials extends JavaPlugin {
         setupDefaultConfig();
 
         TreeTier.setupValues(this.getConfig());
-
-        World overworld = Bukkit.getWorlds().get(0);
+        
         TreeManager treeManager = TreeManager.getInstance();
-        treeManager.createTree(new Location(overworld, 18,-60,8), TreeTier.ONE);
-        treeManager.createTree(new Location(overworld, 18,-60,12), TreeTier.TWO);
-        treeManager.createTree(new Location(overworld, 18,-60,16), TreeTier.THREE);
+        treeManager.loadTreeData();
 
         Bukkit.getLogger().info(ChatColor.GREEN + this.getName() + " Enabled");
 
@@ -35,6 +31,8 @@ public class WoodChoppingTrials extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        TreeManager.getInstance().saveTreeData();
+
         World overworld = Bukkit.getWorlds().get(0);
         List<Entity> entityList = overworld.getEntities();
         for (Entity entity : entityList) {
@@ -52,6 +50,10 @@ public class WoodChoppingTrials extends JavaPlugin {
         return plugin;
     }
 
+    public static void postServerMessage(String message) {
+        Bukkit.getLogger().info("["+ getPlugin().getName() +"] "+ message);
+    }
+
     // ----------------------------------------------------------
 
     private void setupDefaultConfig() {
@@ -62,4 +64,6 @@ public class WoodChoppingTrials extends JavaPlugin {
         config.options().copyDefaults(true);
         this.saveDefaultConfig();
     }
+
+
 }
