@@ -2,6 +2,7 @@ package me.equaferrous.woodchoppingtrials.trees;
 
 import me.equaferrous.woodchoppingtrials.TextEntity;
 import me.equaferrous.woodchoppingtrials.Main;
+import me.equaferrous.woodchoppingtrials.utility.Utility;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitTask;
@@ -32,6 +33,8 @@ public class Tree {
     // --------------------------------------------
 
     public Tree(Location blockLocation, TreeTier treeTier) {
+        blockLocation = Utility.getBlockLocation(blockLocation);
+
         saplingBlock = blockLocation.getBlock();
         textEntity = new TextEntity(blockLocation.add(0,1,0));
         tier = treeTier;

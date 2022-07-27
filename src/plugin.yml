@@ -4,3 +4,10 @@ author: EquaFerrous
 main: me.equaferrous.woodchoppingtrials.Main
 api-version: 1.19
 description: Provides the functionality for the Wood Chopping Trials minigame.
+commands:
+  createTree:
+    description: Places a new tree.
+    usage: /<command> (one | two | ... | ten)
+  removeTree:
+    description: Removes a tree.
+    usage: /<command>

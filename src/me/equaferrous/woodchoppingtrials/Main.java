@@ -1,5 +1,7 @@
 package me.equaferrous.woodchoppingtrials;
 
+import me.equaferrous.woodchoppingtrials.commands.CreateTreeCommand;
+import me.equaferrous.woodchoppingtrials.commands.RemoveTreeCommand;
 import me.equaferrous.woodchoppingtrials.trees.TreeManager;
 import me.equaferrous.woodchoppingtrials.trees.TreeTier;
 import org.bukkit.*;
@@ -18,10 +20,13 @@ public class Main extends JavaPlugin {
     public void onEnable() {
 
         plugin = this;
+        this.getCommand("createTree").setExecutor(new CreateTreeCommand());
+        this.getCommand("removeTree").setExecutor(new RemoveTreeCommand());
+
         setupDefaultConfig();
 
         TreeTier.setupValues(this.getConfig());
-        
+
         TreeManager treeManager = TreeManager.getInstance();
         treeManager.loadTreeData();
 

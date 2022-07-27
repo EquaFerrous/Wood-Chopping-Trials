@@ -2,7 +2,10 @@ package me.equaferrous.woodchoppingtrials.trees;
 
 import me.equaferrous.woodchoppingtrials.utility.ConfigManager;
 import me.equaferrous.woodchoppingtrials.Main;
+import me.equaferrous.woodchoppingtrials.utility.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ public class TreeManager {
     private static TreeManager instance;
 
     private final List<Tree> treeList = new ArrayList<>();
-    private final HashMap<Location, Tree> treeLocations = new HashMap<>();
+    private final HashMap<Block, Tree> treeLocations = new HashMap<>();
 
     // --------------------------------------
 
@@ -38,36 +41,41 @@ public class TreeManager {
     // -----------------------------------------
 
     public Tree createTree(Location location, TreeTier treeTier) {
-        if (!treeLocations.containsKey(location)) {
-            Tree newTree = new Tree(location, treeTier);
-            treeList.add(newTree);
-            treeLocations.put(location, newTree);
-            return newTree;
-        }
-        else {
+        if (treeLocations.containsKey(location.getBlock())) {
             return null;
         }
+
+        Tree newTree = new Tree(location, treeTier);
+        treeList.add(newTree);
+        treeLocations.put(location.getBlock(), newTree);
+        return newTree;
+
     }
 
     public void deleteTree(Tree tree) {
-        if (treeLocations.containsValue(tree)) {
-            treeList.remove(tree);
-            treeLocations.remove(tree.getLocation());
-            tree.delete();
+        if (!treeList.contains(tree)) {
+            return;
         }
+
+        treeList.remove(tree);
+        treeLocations.remove(tree.getLocation().getBlock());
+        tree.delete();
     }
 
-    public void deleteTree(Location treeLocation) {
-        if (treeLocations.containsKey(treeLocation)) {
-            Tree tree = treeLocations.get(treeLocation);
-            treeList.remove(tree);
-            treeLocations.remove(treeLocation);
-            tree.delete();
+    public boolean deleteTree(Location location) {
+        if (!treeLocations.containsKey(location.getBlock())) {
+            return false;
         }
+
+        Tree tree = treeLocations.get(location.getBlock());
+        treeList.remove(tree);
+        treeLocations.remove(location.getBlock());
+        tree.delete();
+        return true;
     }
 
     public Tree getTreeAtLocation(Location location) {
-        return treeLocations.get(location);
+        return treeLocations.get(location.getBlock());
     }
 
     public List<Tree> getTreeList() {
@@ -104,4 +112,7 @@ public class TreeManager {
         }
         Main.postServerMessage("TreeData loaded.");
     }
+
+    // ------------------------------
+
 }
