@@ -105,6 +105,7 @@ public class Tree {
         for (Block log : logList) {
             log.setType(Material.AIR);
         }
+        saplingBlock.setType(Material.AIR);
 
         textEntity.delete();
         changeStatus(TreeStatus.DISABLED);
