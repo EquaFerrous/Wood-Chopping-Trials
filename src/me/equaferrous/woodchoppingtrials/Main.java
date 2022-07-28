@@ -2,6 +2,7 @@ package me.equaferrous.woodchoppingtrials;
 
 import me.equaferrous.woodchoppingtrials.commands.CreateTreeCommand;
 import me.equaferrous.woodchoppingtrials.commands.RemoveTreeCommand;
+import me.equaferrous.woodchoppingtrials.events.PreventLeafDropsEvent;
 import me.equaferrous.woodchoppingtrials.trees.TreeManager;
 import me.equaferrous.woodchoppingtrials.trees.TreeTier;
 import me.equaferrous.woodchoppingtrials.utility.MessageSystem;
@@ -23,9 +24,10 @@ public class Main extends JavaPlugin {
         plugin = this;
         this.getCommand("createTree").setExecutor(new CreateTreeCommand());
         this.getCommand("removeTree").setExecutor(new RemoveTreeCommand());
+        getServer().getPluginManager().registerEvents(new PreventLeafDropsEvent(), this);
+
 
         setupDefaultConfig();
-
         TreeTier.setupValues(this.getConfig());
 
         TreeManager treeManager = TreeManager.getInstance();
