@@ -4,6 +4,7 @@ import me.equaferrous.woodchoppingtrials.commands.CreateTreeCommand;
 import me.equaferrous.woodchoppingtrials.commands.RemoveTreeCommand;
 import me.equaferrous.woodchoppingtrials.trees.TreeManager;
 import me.equaferrous.woodchoppingtrials.trees.TreeTier;
+import me.equaferrous.woodchoppingtrials.utility.MessageSystem;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -30,8 +31,7 @@ public class Main extends JavaPlugin {
         TreeManager treeManager = TreeManager.getInstance();
         treeManager.loadTreeData();
 
-        Bukkit.getLogger().info(ChatColor.GREEN + this.getName() + " Enabled");
-
+        MessageSystem.opBroadcast("Plugin enabled.");
     }
 
     @Override
@@ -47,17 +47,13 @@ public class Main extends JavaPlugin {
             }
         }
 
-        Bukkit.getLogger().info(ChatColor.RED + this.getName() + " Disabled");
+        MessageSystem.opBroadcast("Plugin disabled.");
     }
 
     // -----------------------------------------------------------
 
     public static Plugin getPlugin() {
         return plugin;
-    }
-
-    public static void postServerMessage(String message) {
-        Bukkit.getLogger().info("["+ getPlugin().getName() +"] "+ message);
     }
 
     // ----------------------------------------------------------

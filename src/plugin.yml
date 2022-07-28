@@ -11,3 +11,12 @@ commands:
   removeTree:
     description: Removes a tree.
     usage: /<command>
+permissions:
+  gameMaster:
+    description: Gives access to all commands to change and run the game.
+    default: op
+    children:
+      gameAdmin: true
+  gameAdmin:
+    description: Gives access to commands to assist with running the game.
+    default: false

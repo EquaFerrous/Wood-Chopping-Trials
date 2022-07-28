@@ -2,6 +2,7 @@ package me.equaferrous.woodchoppingtrials.trees;
 
 import me.equaferrous.woodchoppingtrials.utility.ConfigManager;
 import me.equaferrous.woodchoppingtrials.Main;
+import me.equaferrous.woodchoppingtrials.utility.MessageSystem;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -98,7 +99,7 @@ public class TreeManager {
             treeNum++;
         }
         ConfigManager.saveConfig(config, "treeData");
-        Main.postServerMessage("TreeData saved.");
+        MessageSystem.opBroadcast("Tree data saved.");
     }
 
     public void loadTreeData() {
@@ -112,7 +113,7 @@ public class TreeManager {
             TreeTier treeTier = TreeTier.valueOf(config.getString("data."+ key +".tier"));
             createTree(location, treeTier);
         }
-        Main.postServerMessage("TreeData loaded.");
+        MessageSystem.opBroadcast("Tree data loaded.");
     }
 
     // ------------------------------
