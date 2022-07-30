@@ -31,13 +31,12 @@ public class CreateTreeCommand implements CommandExecutor {
         }
 
         if (TreeManager.getInstance().createTree(player.getLocation(), tier) != null) {
-            MessageSystem.positiveMessage(player, "Tree created.");
+            MessageSystem.positiveMessage(player, "Tier "+ tier +" tree created.");
         }
         else {
-            MessageSystem.negativeMessage(player, "Tree already exists.");
+            MessageSystem.negativeMessage(player, "Tree already exists in this location.");
         }
 
-        TreeManager.getInstance().createTree(player.getLocation(), tier);
         return true;
     }
 }
