@@ -3,6 +3,7 @@ package me.equaferrous.woodchoppingtrials.commands;
 import me.equaferrous.woodchoppingtrials.trees.TreeManager;
 import me.equaferrous.woodchoppingtrials.trees.TreeTier;
 import me.equaferrous.woodchoppingtrials.utility.MessageSystem;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -70,6 +71,6 @@ public class CreateTreeCommand implements CommandExecutor {
     }
 
     private void throwInvalidCommand(CommandSender sender) {
-        MessageSystem.negativeMessage(sender, "Correct usage: /createTree (one | two | ... | ten) [<x> <y> <z>]");
+        MessageSystem.negativeMessage(sender, "Correct usage: "+ ChatColor.LIGHT_PURPLE +"/createTree (one | two | ... | ten) [<x> <y> <z>]");
     }
 }
