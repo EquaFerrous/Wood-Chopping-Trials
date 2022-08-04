@@ -3,6 +3,7 @@ package me.equaferrous.woodchoppingtrials.commands;
 import me.equaferrous.woodchoppingtrials.trees.TreeManager;
 import me.equaferrous.woodchoppingtrials.trees.TreeTier;
 import me.equaferrous.woodchoppingtrials.utility.MessageSystem;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,8 +16,8 @@ public class CreateTreeCommand implements CommandExecutor {
             MessageSystem.negativeMessage(commandSender, "Command only usable by players.");
             return true;
         }
-        if (args.length != 1) {
-            MessageSystem.negativeMessage(commandSender, "Correct usage: /createTree (one | two | ... | ten)");
+        if (args.length != 1 && args.length != 4) {
+            throwInvalidCommand(commandSender);
             return true;
         }
 
@@ -26,17 +27,49 @@ public class CreateTreeCommand implements CommandExecutor {
             tier = TreeTier.valueOf(args[0].toUpperCase());
         }
         catch (IllegalArgumentException e) {
-            MessageSystem.negativeMessage(player, "Correct usage: /createTree (one | two | ... | ten)");
+            throwInvalidCommand(commandSender);
             return true;
         }
 
-        if (TreeManager.getInstance().createTree(player.getLocation(), tier) != null) {
-            MessageSystem.positiveMessage(player, "Tier "+ tier +" tree created.");
+        Location location;
+        if (args.length == 1) {
+            location = player.getLocation();
         }
         else {
-            MessageSystem.negativeMessage(player, "Tree already exists in this location.");
+            double x;
+            double y;
+            double z;
+            try {
+                x = Double.parseDouble(args[1]);
+                y = Double.parseDouble(args[2]);
+                z = Double.parseDouble(args[3]);
+            }
+            catch (NumberFormatException e) {
+                throwInvalidCommand(commandSender);
+                return true;
+            }
+
+            location = new Location(player.getWorld(), x, y, z);
         }
 
+        executeCommand(location, tier, player);
+
         return true;
+    }
+
+    // ------------------------------------------
+
+    private void executeCommand(Location location, TreeTier tier, CommandSender sender) {
+        if (TreeManager.getInstance().createTree(location, tier) != null) {
+            String blockPos = location.getBlockX() +" "+ location.getBlockY() +" "+ location.getBlockZ();
+            MessageSystem.positiveMessage(sender, "Tier "+ tier +" tree created at "+ blockPos +".");
+        }
+        else {
+            MessageSystem.negativeMessage(sender, "Tree already exists in this location.");
+        }
+    }
+
+    private void throwInvalidCommand(CommandSender sender) {
+        MessageSystem.negativeMessage(sender, "Correct usage: /createTree (one | two | ... | ten) [<x> <y> <z>]");
     }
 }
