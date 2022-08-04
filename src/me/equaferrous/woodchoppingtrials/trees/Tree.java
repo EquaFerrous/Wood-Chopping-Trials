@@ -3,6 +3,7 @@ package me.equaferrous.woodchoppingtrials.trees;
 import me.equaferrous.woodchoppingtrials.TextEntity;
 import me.equaferrous.woodchoppingtrials.Main;
 import me.equaferrous.woodchoppingtrials.utility.Utility;
+import me.equaferrous.woodchoppingtrials.utility.WorldObject;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitTask;
@@ -10,7 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tree {
+public class Tree extends WorldObject {
 
     private static final int TICK_DELAY = 10;
     private static final int TREE_SEARCH_WIDTH = 1;
@@ -33,11 +34,11 @@ public class Tree {
 
     // --------------------------------------------
 
-    public Tree(Location blockLocation, TreeTier treeTier) {
-        blockLocation = Utility.getBlockLocation(blockLocation);
+    public Tree(Location location, TreeTier treeTier) {
+        super(location);
 
-        saplingBlock = blockLocation.getBlock();
-        textEntity = new TextEntity(blockLocation.add(0,1,0));
+        saplingBlock = getBlock();
+        textEntity = new TextEntity(getLocation().add(0,1,0));
         tier = treeTier;
 
         maxGrowTime = tier.getGrowTime();
@@ -84,14 +85,11 @@ public class Tree {
         return status;
     }
 
-    public Location getLocation() {
-        return saplingBlock.getLocation();
-    }
-
     public TreeTier getTier() {
         return tier;
     }
 
+    @Override
     public void delete() {
         if (growTickTask != null) {
             growTickTask.cancel();
